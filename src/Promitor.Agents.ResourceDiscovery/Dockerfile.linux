@@ -11,6 +11,7 @@ COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
 COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Integrations.LogAnalytics/* Promitor.Integrations.LogAnalytics/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
+COPY Promitor.Integrations.Sinks.StatsD/* Promitor.Integrations.Sinks.StatsD/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=$VERSION
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0.3-alpine3.16 AS runtime

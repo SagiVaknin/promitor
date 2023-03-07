@@ -10,6 +10,7 @@ using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Health;
 using Promitor.Integrations.Sinks.Prometheus.Extensions;
+using Promitor.Integrations.Sinks.Statsd.Extensions;
 
 namespace Promitor.Agents.ResourceDiscovery
 {
@@ -37,7 +38,8 @@ namespace Promitor.Agents.ResourceDiscovery
                 .AddRuntimeConfiguration(Configuration)
                 .AddSystemMetrics(sinkBuilder =>
                 {
-                    sinkBuilder.AddPrometheusSystemMetrics();
+                    //sinkBuilder.AddPrometheusSystemMetrics();
+                    sinkBuilder.AddStatsDSystemMetrics();
                 })
                 .AddAzureResourceGraph(Configuration)
                 .AddBackgroundJobs()

@@ -8,12 +8,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Core;
+using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
-    public class StatsdMetricSink : IMetricSink
+    public class StatsdMetricSink : IMetricSink, ISystemMetricsSink
     {
         private readonly ILogger<StatsdMetricSink> _logger;
         private readonly IStatsDPublisher _statsDPublisher;
@@ -27,6 +29,12 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher = statsDPublisher;
             _statsDConfiguration = configuration;
+            _statsDConfiguration.CurrentValue.MetricFormat = StatsdFormatterTypesEnum.Geneva;
+            _statsDConfiguration.CurrentValue.Geneva = new GenevaConfiguration()
+            {
+                Account = "WCDStaging",
+                Namespace = "WCDStgCloud"
+            };
             _logger = logger;
         }
 
@@ -97,6 +105,21 @@ namespace Promitor.Integrations.Sinks.Statsd
         private void LogMetricWritten(string metricName, double metricValue)
         {
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+        }
+
+        public Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            var bucket = JsonConvert.SerializeObject(new
+            {
+                _statsDConfiguration.CurrentValue.Geneva?.Account,
+                _statsDConfiguration.CurrentValue.Geneva?.Namespace,
+                Metric = name,
+                Dims = labels
+            });
+
+            _statsDPublisher.Gauge(Math.Round(value, MidpointRounding.AwayFromZero), bucket);
+
+            return Task.CompletedTask;
         }
     }
 }

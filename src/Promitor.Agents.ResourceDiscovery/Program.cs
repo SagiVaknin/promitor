@@ -24,7 +24,7 @@ namespace Promitor.Agents.ResourceDiscovery
 
                 Welcome();
 
-                var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+                var configurationFolder = "C:\\WorkSpace\\Promitor\\promitor\\config\\promitor\\resource-discovery";//Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
                 if (string.IsNullOrWhiteSpace(configurationFolder))
                 {
                     Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
